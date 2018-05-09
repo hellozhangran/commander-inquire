@@ -52,12 +52,53 @@ program
         console.log('dir: ', dir)
     })
 
+// 下面是需要动态回答的方法
+// type包括： 
+// input–输入
+// validate–验证
+// list–列表选项
+// confirm–提示
+// checkbox–复选框等等
+program
+    .command('ask')
+    .action(function(){
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'moduleName',
+                message: '请输入模块名称',
+                validate: function (input){
+                    if(!input) {
+                        return '不能为空'
+                    }
+                    return true
+                }
+            },{
+                type: 'list',
+                name: 'css',
+                message: '想用什么css预处理器呢',
+                choices: [{
+                        name: 'Sass/Compass',
+                        value: 'sass'
+                    },{
+                        name: 'Less',
+                        value: 'less'
+                    }]
+            }
+        ]).then(function (answers) {
+            // chalk给console添加样式
+            console.log(chalk.blue(answers.moduleName))
+            console.log(chalk.red(answers.css))
+        })
+    })
+
 program.parse(process.argv)
 
 // 指定定义的option可以在program上直接取到
 if(program.age){
     console.log('输入了名字：', program.age)
 }
+
 
 // commander的详细解释见这里：
 // https://www.kancloud.cn/outsider/clitool/313192
